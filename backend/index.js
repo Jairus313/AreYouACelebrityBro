@@ -2,11 +2,19 @@ const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
 const fs = require("fs");
+const path = require("path");
 
 const app = express();
 app.use(cors());
 
-const upload = multer({ dest: "uploads/" });
+// Ensure uploads directory exists
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+// Configure multer to use uploads folder
+const upload = multer({ dest: uploadDir });
 
 app.post(
   "/compare",
@@ -16,6 +24,13 @@ app.post(
   ]),
   (req, res) => {
     try {
+      console.log("📥 Received request to /compare");
+
+      if (!req.files || !req.files["follower"] || !req.files["following"]) {
+        console.error("❌ Missing files in the request");
+        return res.status(400).json({ error: "Both follower and following files are required." });
+      }
+
       const followerPath = req.files["follower"][0].path;
       const followingPath = req.files["following"][0].path;
 
@@ -41,15 +56,17 @@ app.post(
         (user) => !FOLLOWING_LIST.has(user)
       ).sort();
 
+      // Clean up uploaded files
       fs.unlinkSync(followerPath);
       fs.unlinkSync(followingPath);
 
+      console.log("✅ Comparison done. Sending response.");
       res.json({
         unfollowers,
         not_following_back: notFollowingBack
       });
     } catch (err) {
-      console.error(err);
+      console.error("❌ Error during file processing:", err.message);
       res.status(500).json({ error: "Failed to process files." });
     }
   }
