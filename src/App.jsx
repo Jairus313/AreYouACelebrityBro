@@ -159,7 +159,7 @@ function App() {
       </main>
 
       <footer className="bg-[#1e1e1e] text-center text-sm text-gray-400 py-2">
-        © {new Date().getFullYear()} Built with pure hate 🖕🏻
+        © {new Date().getFullYear()} Built with pure HATE 🖕🏻
       </footer>
     </div>
   );
