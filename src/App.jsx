@@ -116,16 +116,17 @@ function App() {
             </div>
 
             <div className="bg-[#1e1e1e] p-6 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4">Unfollowed You</h2>
+              <h2 className="text-xl font-semibold mb-1 text-center">MFs unfollowed you 😤</h2>
+              <p className="text-sm text-gray-400 mb-4 text-center">{result.unfollowers.length} accounts</p>
               <div className="grid gap-3">
                 {result.unfollowers.map((user, i) => (
-                  <div key={i} className="flex justify-between items-center bg-[#2a2a2a] p-3 rounded">
-                    <span>{user}</span>
+                  <div key={i} className="flex justify-between items-center bg-[#2a2a2a] p-3 rounded flex-wrap sm:flex-nowrap">
+                    <span className="break-all">{user}</span>
                     <a
                       href={`https://instagram.com/${user}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-1 px-3 rounded"
+                      className="bg-blue-500 text-white text-xs font-semibold py-1 px-3 rounded no-underline hover:bg-blue-500 hover:text-white visited:text-white"
                     >
                       View Account
                     </a>
@@ -135,11 +136,12 @@ function App() {
             </div>
 
             <div className="bg-[#1e1e1e] p-6 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4">Not Following Back</h2>
+              <h2 className="text-xl font-semibold mb-1 text-center">MFs you don't even follow back 😈</h2>
+              <p className="text-sm text-gray-400 mb-4 text-center">{result.not_following_back.length} accounts</p>
               <div className="grid gap-3">
                 {result.not_following_back.map((user, i) => (
-                  <div key={i} className="flex justify-between items-center bg-[#2a2a2a] p-3 rounded">
-                    <span>{user}</span>
+                  <div key={i} className="flex justify-between items-center bg-[#2a2a2a] p-3 rounded flex-wrap sm:flex-nowrap">
+                    <span className="break-all">{user}</span>
                     <a
                       href={`https://instagram.com/${user}`}
                       target="_blank"
