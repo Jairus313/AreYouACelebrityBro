@@ -64,14 +64,12 @@ function App() {
                 />
                 <label
                   htmlFor="follower"
-                  className="w-64 h-40 bg-[#2a2a2a] border-2 border-dashed border-gray-500 flex items-center justify-center text-center cursor-pointer text-sm text-gray-300 rounded-lg hover:border-gray-300 transition relative"
+                  className="w-64 h-40 bg-[#2a2a2a] border-2 border-dashed border-gray-500 flex items-center justify-center text-center cursor-pointer text-sm text-gray-300 rounded-lg hover:border-gray-300 transition"
                 >
-                  {!followerFile ? (
-                    <>
-                      Upload Follower<br />JSON
-                    </>
+                  {followerFile ? (
+                    <span className="text-blue-400 text-xs">{followerFile.name}</span>
                   ) : (
-                    <span className="text-blue-400 text-xs truncate px-2">{followerFile.name}</span>
+                    <>Upload Follower<br />JSON</>
                   )}
                 </label>
               </div>
@@ -86,14 +84,12 @@ function App() {
                 />
                 <label
                   htmlFor="following"
-                  className="w-64 h-40 bg-[#2a2a2a] border-2 border-dashed border-gray-500 flex items-center justify-center text-center cursor-pointer text-sm text-gray-300 rounded-lg hover:border-gray-300 transition relative"
+                  className="w-64 h-40 bg-[#2a2a2a] border-2 border-dashed border-gray-500 flex items-center justify-center text-center cursor-pointer text-sm text-gray-300 rounded-lg hover:border-gray-300 transition"
                 >
-                  {!followingFile ? (
-                    <>
-                      Upload Following<br />JSON
-                    </>
+                  {followingFile ? (
+                    <span className="text-blue-400 text-xs">{followingFile.name}</span>
                   ) : (
-                    <span className="text-blue-400 text-xs truncate px-2">{followingFile.name}</span>
+                    <>Upload Following<br />JSON</>
                   )}
                 </label>
               </div>
@@ -109,54 +105,54 @@ function App() {
             {error && <p className="text-red-400 text-center mb-4">{error}</p>}
           </>
         ) : (
-          <>
-            <div className="w-full max-w-3xl text-left mb-4">
+          <div className="max-w-3xl w-full space-y-8">
+            <div className="text-left mb-4">
               <button
                 onClick={handleGoBack}
-                className="text-blue-400 hover:text-blue-300 flex items-center gap-2"
+                className="text-white text-sm flex items-center gap-2 hover:text-blue-400"
               >
-                <span className="text-xl">←</span> <span>Go Back</span>
+                <span className="text-xl">←</span> Go Back
               </button>
             </div>
 
-            <div className="max-w-3xl w-full space-y-8">
-              <div className="bg-[#1e1e1e] p-6 rounded-xl">
-                <h2 className="text-xl font-semibold mb-4">Unfollowed You</h2>
-                <ul className="space-y-1 list-disc list-inside">
-                  {result.unfollowers.map((user, i) => (
-                    <li key={i}>
-                      <a
-                        href={`https://instagram.com/${user}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:underline"
-                      >
-                        {user}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-[#1e1e1e] p-6 rounded-xl">
-                <h2 className="text-xl font-semibold mb-4">Not Following Back</h2>
-                <ul className="space-y-1 list-disc list-inside">
-                  {result.not_following_back.map((user, i) => (
-                    <li key={i}>
-                      <a
-                        href={`https://instagram.com/${user}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:underline"
-                      >
-                        {user}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+            <div className="bg-[#1e1e1e] p-6 rounded-xl">
+              <h2 className="text-xl font-semibold mb-4">Unfollowed You</h2>
+              <div className="grid gap-3">
+                {result.unfollowers.map((user, i) => (
+                  <div key={i} className="flex justify-between items-center bg-[#2a2a2a] p-3 rounded">
+                    <span>{user}</span>
+                    <a
+                      href={`https://instagram.com/${user}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-1 px-3 rounded"
+                    >
+                      View Account
+                    </a>
+                  </div>
+                ))}
               </div>
             </div>
-          </>
+
+            <div className="bg-[#1e1e1e] p-6 rounded-xl">
+              <h2 className="text-xl font-semibold mb-4">Not Following Back</h2>
+              <div className="grid gap-3">
+                {result.not_following_back.map((user, i) => (
+                  <div key={i} className="flex justify-between items-center bg-[#2a2a2a] p-3 rounded">
+                    <span>{user}</span>
+                    <a
+                      href={`https://instagram.com/${user}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-blue-500 text-white text-xs font-semibold py-1 px-3 rounded no-underline hover:bg-blue-500 hover:text-white visited:text-white"
+                    >
+                      View Account
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
       </main>
 
