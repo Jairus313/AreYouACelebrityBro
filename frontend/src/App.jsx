@@ -1,11 +1,6 @@
-// src/App.jsx
-import { useRef, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 
 function App() {
-  const followerInputRef = useRef(null);
-  const followingInputRef = useRef(null);
-
   const [followerFile, setFollowerFile] = useState(null);
   const [followingFile, setFollowingFile] = useState(null);
   const [result, setResult] = useState(null);
@@ -17,86 +12,117 @@ function App() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("follower", followerFile);
-    formData.append("following", followingFile);
-
     try {
-      const res = await axios.post("http://localhost:4000/compare", formData);
-      setResult(res.data);
+      const followerText = await followerFile.text();
+      const followingText = await followingFile.text();
+
+      const followerJson = JSON.parse(followerText);
+      const followingJson = JSON.parse(followingText);
+
+      const followers = new Set(
+        followerJson.map((entry) => entry.string_list_data[0].value)
+      );
+
+      const followings = new Set(
+        followingJson.relationships_following.map(
+          (entry) => entry.string_list_data[0].value
+        )
+      );
+
+      const unfollowers = [...followings].filter((user) => !followers.has(user));
+      const notFollowingBack = [...followers].filter((user) => !followings.has(user));
+
+      setResult({ unfollowers, not_following_back: notFollowingBack });
       setError("");
-    } catch (err) {
-      console.error("❌ Error:", err);
+    } catch (e) {
+      console.error(e);
       setError("Failed to process files.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
-      <h1 className="text-3xl font-bold mb-10 text-center">
-        Instagram Unfollowers Insight
-      </h1>
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <h1 className="text-3xl font-bold text-center mb-8">Instagram Unfollowers Insight</h1>
 
-      {/* Upload Buttons */}
-      <div className="flex gap-6 mb-6">
-        {/* Upload Following */}
-        <button
-          className="w-32 h-32 bg-gray-800 hover:bg-gray-700 text-white font-medium text-sm text-center p-2"
-          onClick={() => followingInputRef.current.click()}
-        >
-          Upload <br /> Following <br /> JSON
-        </button>
-        <input
-          type="file"
-          accept=".json"
-          ref={followingInputRef}
-          onChange={(e) => setFollowingFile(e.target.files[0])}
-          style={{ display: "none" }}
-        />
+      <div className="flex justify-center gap-6 mb-6">
+        <div>
+          <input
+            type="file"
+            accept=".json"
+            id="follower"
+            className="hidden"
+            onChange={(e) => setFollowerFile(e.target.files[0])}
+          />
+          <label
+            htmlFor="follower"
+            className="bg-blue-600 hover:bg-blue-700 px-6 py-4 rounded-lg cursor-pointer text-lg"
+          >
+            Upload Follower JSON
+          </label>
+        </div>
 
-        {/* Upload Follower */}
-        <button
-          className="w-32 h-32 bg-gray-800 hover:bg-gray-700 text-white font-medium text-sm text-center p-2"
-          onClick={() => followerInputRef.current.click()}
-        >
-          Upload <br /> Follower <br /> JSON
-        </button>
-        <input
-          type="file"
-          accept=".json"
-          ref={followerInputRef}
-          onChange={(e) => setFollowerFile(e.target.files[0])}
-          style={{ display: "none" }}
-        />
+        <div>
+          <input
+            type="file"
+            accept=".json"
+            id="following"
+            className="hidden"
+            onChange={(e) => setFollowingFile(e.target.files[0])}
+          />
+          <label
+            htmlFor="following"
+            className="bg-blue-600 hover:bg-blue-700 px-6 py-4 rounded-lg cursor-pointer text-lg"
+          >
+            Upload Following JSON
+          </label>
+        </div>
       </div>
 
-      {/* Compare Button */}
-      <button
-        className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 font-semibold rounded mb-6"
-        onClick={handleCompare}
-      >
-        Compare
-      </button>
+      <div className="flex justify-center mb-6">
+        <button
+          onClick={handleCompare}
+          className="bg-white text-black px-6 py-3 rounded font-semibold hover:bg-gray-300"
+        >
+          Compare
+        </button>
+      </div>
 
-      {/* Error */}
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && <p className="text-red-400 text-center mb-4">{error}</p>}
 
-      {/* Result */}
       {result && (
-        <div className="bg-gray-800 p-6 rounded w-full max-w-2xl text-left space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold mb-2">Unfollowers:</h2>
-            <ul className="list-disc ml-5">
+        <div className="max-w-3xl mx-auto space-y-8">
+          <div className="bg-gray-800 p-6 rounded-xl">
+            <h2 className="text-xl font-semibold mb-4">Unfollowed You</h2>
+            <ul className="space-y-1 list-disc list-inside">
               {result.unfollowers.map((user, i) => (
-                <li key={i}>{user}</li>
+                <li key={i}>
+                  <a
+                    href={`https://instagram.com/${user}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:underline"
+                  >
+                    {user}
+                  </a>
+                </li>
               ))}
             </ul>
           </div>
-          <div>
-            <h2 className="text-lg font-semibold mb-2">Not Following Back:</h2>
-            <ul className="list-disc ml-5">
+
+          <div className="bg-gray-800 p-6 rounded-xl">
+            <h2 className="text-xl font-semibold mb-4">Not Following Back</h2>
+            <ul className="space-y-1 list-disc list-inside">
               {result.not_following_back.map((user, i) => (
-                <li key={i}>{user}</li>
+                <li key={i}>
+                  <a
+                    href={`https://instagram.com/${user}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:underline"
+                  >
+                    {user}
+                  </a>
+                </li>
               ))}
             </ul>
           </div>
