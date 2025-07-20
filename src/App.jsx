@@ -40,60 +40,82 @@ function App() {
     }
   };
 
+  const handleGoBack = () => {
+    setResult(null);
+    setFollowerFile(null);
+    setFollowingFile(null);
+    setError("");
+  };
+
   return (
     <div className="min-h-screen bg-[#121212] text-white p-6 flex flex-col justify-center items-center">
-      <h1 className="text-4xl font-lobster text-white text-center mb-4">
-        Check which MF
-      </h1>
-      <h2 className="text-2xl font-lobster text-white text-center mb-8">
-        Unfollowed YOU.!😏
-      </h2>
+      {!result && (
+        <>
+          <h1 className="text-4xl font-lobster text-white text-center mb-2">Check which MF</h1>
+          <h2 className="text-2xl font-lobster text-white text-center mb-6">Unfollowed YOU.! 😏</h2>
 
-      <div className="flex flex-wrap justify-center gap-6 mb-6">
-        <div>
-          <input
-            type="file"
-            accept=".json"
-            id="follower"
-            className="hidden"
-            onChange={(e) => setFollowerFile(e.target.files[0])}
-          />
-          <label
-            htmlFor="follower"
-            className="bg-gray-700 hover:bg-gray-600 px-6 py-4 rounded-lg cursor-pointer text-lg w-60 text-center"
+          <div className="flex flex-wrap justify-center gap-6 mb-8">
+            <div>
+              <input
+                type="file"
+                accept=".json"
+                id="follower"
+                className="hidden"
+                onChange={(e) => setFollowerFile(e.target.files[0])}
+              />
+              <label
+                htmlFor="follower"
+                className="w-64 h-40 bg-[#2a2a2a] border-2 border-dashed border-gray-500 flex items-center justify-center text-center cursor-pointer text-sm text-gray-300 rounded-lg hover:border-gray-300 transition px-2"
+              >
+                {followerFile ? (
+                  <span className="text-sm text-blue-400 break-words">{followerFile.name}</span>
+                ) : (
+                  <>Upload Follower<br />JSON</>
+                )}
+              </label>
+            </div>
+
+            <div>
+              <input
+                type="file"
+                accept=".json"
+                id="following"
+                className="hidden"
+                onChange={(e) => setFollowingFile(e.target.files[0])}
+              />
+              <label
+                htmlFor="following"
+                className="w-64 h-40 bg-[#2a2a2a] border-2 border-dashed border-gray-500 flex items-center justify-center text-center cursor-pointer text-sm text-gray-300 rounded-lg hover:border-gray-300 transition px-2"
+              >
+                {followingFile ? (
+                  <span className="text-sm text-blue-400 break-words">{followingFile.name}</span>
+                ) : (
+                  <>Upload Following<br />JSON</>
+                )}
+              </label>
+            </div>
+          </div>
+
+          <button
+            onClick={handleCompare}
+            className="bg-gray-600 text-white px-10 py-3 rounded font-semibold hover:bg-gray-500 transition mb-8"
           >
-            Upload Follower JSON
-          </label>
-        </div>
+            Compare
+          </button>
 
-        <div>
-          <input
-            type="file"
-            accept=".json"
-            id="following"
-            className="hidden"
-            onChange={(e) => setFollowingFile(e.target.files[0])}
-          />
-          <label
-            htmlFor="following"
-            className="bg-gray-700 hover:bg-gray-600 px-6 py-4 rounded-lg cursor-pointer text-lg w-60 text-center"
-          >
-            Upload Following JSON
-          </label>
-        </div>
-      </div>
-
-      <button
-        onClick={handleCompare}
-        className="bg-gray-800 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gray-700 w-60 text-center mb-6"
-      >
-        Compare
-      </button>
-
-      {error && <p className="text-red-400 text-center mb-4">{error}</p>}
+          {error && <p className="text-red-400 text-center mb-4">{error}</p>}
+        </>
+      )}
 
       {result && (
         <div className="max-w-3xl w-full space-y-8">
+          <button
+            onClick={handleGoBack}
+            className="bg-gray-700 text-white px-6 py-2 rounded font-semibold hover:bg-gray-600 mb-6"
+          >
+            ← Go Back
+          </button>
+
           <div className="bg-[#1e1e1e] p-6 rounded-xl">
             <h2 className="text-xl font-semibold mb-4">Unfollowed You</h2>
             <ul className="space-y-1 list-disc list-inside">
