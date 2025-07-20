@@ -64,13 +64,16 @@ function App() {
                 />
                 <label
                   htmlFor="follower"
-                  className="w-64 h-40 bg-[#2a2a2a] border-2 border-dashed border-gray-500 flex items-center justify-center text-center cursor-pointer text-sm text-gray-300 rounded-lg hover:border-gray-300 transition"
+                  className="w-64 h-40 bg-[#2a2a2a] border-2 border-dashed border-gray-500 flex items-center justify-center text-center cursor-pointer text-sm text-gray-300 rounded-lg hover:border-gray-300 transition relative"
                 >
-                  Upload Follower<br />JSON
+                  {!followerFile ? (
+                    <>
+                      Upload Follower<br />JSON
+                    </>
+                  ) : (
+                    <span className="text-blue-400 text-xs truncate px-2">{followerFile.name}</span>
+                  )}
                 </label>
-                {followerFile && (
-                  <p className="text-blue-400 text-xs mt-2">{followerFile.name}</p>
-                )}
               </div>
 
               <div className="flex flex-col items-center">
@@ -83,13 +86,16 @@ function App() {
                 />
                 <label
                   htmlFor="following"
-                  className="w-64 h-40 bg-[#2a2a2a] border-2 border-dashed border-gray-500 flex items-center justify-center text-center cursor-pointer text-sm text-gray-300 rounded-lg hover:border-gray-300 transition"
+                  className="w-64 h-40 bg-[#2a2a2a] border-2 border-dashed border-gray-500 flex items-center justify-center text-center cursor-pointer text-sm text-gray-300 rounded-lg hover:border-gray-300 transition relative"
                 >
-                  Upload Following<br />JSON
+                  {!followingFile ? (
+                    <>
+                      Upload Following<br />JSON
+                    </>
+                  ) : (
+                    <span className="text-blue-400 text-xs truncate px-2">{followingFile.name}</span>
+                  )}
                 </label>
-                {followingFile && (
-                  <p className="text-blue-400 text-xs mt-2">{followingFile.name}</p>
-                )}
               </div>
             </div>
 
@@ -103,52 +109,54 @@ function App() {
             {error && <p className="text-red-400 text-center mb-4">{error}</p>}
           </>
         ) : (
-          <div className="max-w-3xl w-full space-y-8">
-            <div className="bg-[#1e1e1e] p-6 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4">Unfollowed You</h2>
-              <ul className="space-y-1 list-disc list-inside">
-                {result.unfollowers.map((user, i) => (
-                  <li key={i}>
-                    <a
-                      href={`https://instagram.com/${user}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-400 hover:underline"
-                    >
-                      {user}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="bg-[#1e1e1e] p-6 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4">Not Following Back</h2>
-              <ul className="space-y-1 list-disc list-inside">
-                {result.not_following_back.map((user, i) => (
-                  <li key={i}>
-                    <a
-                      href={`https://instagram.com/${user}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-400 hover:underline"
-                    >
-                      {user}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="text-center">
+          <>
+            <div className="w-full max-w-3xl text-left mb-4">
               <button
                 onClick={handleGoBack}
-                className="bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-500 transition"
+                className="text-blue-400 hover:text-blue-300 flex items-center gap-2"
               >
-                Go Back
+                <span className="text-xl">←</span> <span>Go Back</span>
               </button>
             </div>
-          </div>
+
+            <div className="max-w-3xl w-full space-y-8">
+              <div className="bg-[#1e1e1e] p-6 rounded-xl">
+                <h2 className="text-xl font-semibold mb-4">Unfollowed You</h2>
+                <ul className="space-y-1 list-disc list-inside">
+                  {result.unfollowers.map((user, i) => (
+                    <li key={i}>
+                      <a
+                        href={`https://instagram.com/${user}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:underline"
+                      >
+                        {user}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="bg-[#1e1e1e] p-6 rounded-xl">
+                <h2 className="text-xl font-semibold mb-4">Not Following Back</h2>
+                <ul className="space-y-1 list-disc list-inside">
+                  {result.not_following_back.map((user, i) => (
+                    <li key={i}>
+                      <a
+                        href={`https://instagram.com/${user}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:underline"
+                      >
+                        {user}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </>
         )}
       </main>
 
