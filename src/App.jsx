@@ -46,8 +46,20 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#121212] text-white">
-      <main className="flex-grow flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen flex flex-col bg-[#121212] text-white relative">
+      {/* Top-right href */}
+      {!result && (
+        <a
+          href="https://accountscenter.instagram.com/info_and_permissions/dyi/?entry_point=notification"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute top-4 right-4 text-white text-sm no-underline sm:top-6 sm:right-6"
+        >
+          Download your data
+        </a>
+      )}
+
+      <main className="flex-grow flex flex-col items-center justify-center p-6 pt-12">
         {!result ? (
           <>
             <h1 className="text-4xl font-lobster text-white text-center mb-2">Check which MF</h1>
